@@ -17,12 +17,15 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Leiningen: camel-snake-kebab:0.4.2" level="project" />
     <orderEntry type="library" name="Leiningen: cheshire:5.10.0" level="project" />
     <orderEntry type="library" name="Leiningen: clojure.java-time:1.4.3" level="project" />
     <orderEntry type="library" name="Leiningen: clout:2.2.1" level="project" />
     <orderEntry type="library" name="Leiningen: com.fasterxml.jackson.core/jackson-core:2.10.2" level="project" />
     <orderEntry type="library" name="Leiningen: com.fasterxml.jackson.dataformat/jackson-dataformat-cbor:2.10.2" level="project" />
     <orderEntry type="library" name="Leiningen: com.fasterxml.jackson.dataformat/jackson-dataformat-smile:2.10.2" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.seancorfield/honeysql:2.6.1243" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.seancorfield/next.jdbc:1.2.780" level="project" />
     <orderEntry type="library" name="Leiningen: commons-codec:1.15" level="project" />
     <orderEntry type="library" name="Leiningen: commons-io:2.16.1" level="project" />
     <orderEntry type="library" name="Leiningen: compojure:1.7.1" level="project" />
@@ -34,7 +37,9 @@
     <orderEntry type="library" name="Leiningen: org.apache.commons/commons-fileupload2-core:2.0.0-M1" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojure:1.11.1" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/core.specs.alpha:0.2.62" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/java.data:1.0.95" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/spec.alpha:0.3.218" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/tools.logging:1.2.1" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.macro:0.1.5" level="project" />
     <orderEntry type="library" name="Leiningen: org.eclipse.jetty.toolchain/jetty-jakarta-servlet-api:5.0.2" level="project" />
     <orderEntry type="library" name="Leiningen: org.eclipse.jetty.websocket/websocket-core-common:11.0.21" level="project" />
@@ -52,6 +57,7 @@
     <orderEntry type="library" name="Leiningen: org.eclipse.jetty/jetty-webapp:11.0.21" level="project" />
     <orderEntry type="library" name="Leiningen: org.eclipse.jetty/jetty-xml:11.0.21" level="project" />
     <orderEntry type="library" name="Leiningen: org.nrepl/incomplete:0.1.0" level="project" />
+    <orderEntry type="library" name="Leiningen: org.postgresql/postgresql:42.2.10" level="project" />
     <orderEntry type="library" name="Leiningen: org.ring-clojure/ring-core-protocols:1.12.2" level="project" />
     <orderEntry type="library" name="Leiningen: org.ring-clojure/ring-jakarta-servlet:1.12.2" level="project" />
     <orderEntry type="library" name="Leiningen: org.ring-clojure/ring-websocket-protocols:1.12.2" level="project" />

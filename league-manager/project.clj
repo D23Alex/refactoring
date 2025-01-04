@@ -7,6 +7,9 @@
                  [ring/ring-core "1.12.2"]
                  [compojure "1.7.1"]
                  [ring/ring-json "0.5.1"]
-                 [clojure.java-time "1.4.3"]]
+                 [clojure.java-time "1.4.3"]
+                 [org.postgresql/postgresql "42.2.10"]
+                 [com.github.seancorfield/next.jdbc "1.2.780"]
+                 [com.github.seancorfield/honeysql "2.6.1243"]]
   :main ^:skip-aot league-manager.core
   :repl-options {:init-ns league-manager.core})
