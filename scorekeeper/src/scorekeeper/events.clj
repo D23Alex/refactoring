@@ -1,4 +1,4 @@
-(ns scorekeeper.totals
+(ns scorekeeper.events
   (:require [scorekeeper.http :refer [http-get]]
             [scorekeeper.config :refer [conf]]
             [scorekeeper.postgres :refer [event-table-names get-all-events]]))

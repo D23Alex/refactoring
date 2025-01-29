@@ -4,7 +4,7 @@
             [clojure.walk]
             [compojure.core :as compojure]
             [compojure.route :as compojure-route]
-            [scorekeeper.totals :refer [get-events]]
+            [scorekeeper.events :refer [get-events]]
             [scorekeeper.postgres :refer [get-event]]
             [scorekeeper.config :refer [conf]]))
 
