@@ -6,5 +6,5 @@
                      :port (-> "LEAGUE_MANAGER_POSTGRES_PORT" System/getenv)
                      :user (System/getenv "LEAGUE_MANAGER_POSTGRES_USER")
                      :password (System/getenv "LEAGUE_MANAGER_POSTGRES_PASSWORD")}
-           :base-url "/api"
+           :base-url "/api/league-manager/"
            :port (-> "LEAGUE_MANAGER_PORT" System/getenv Integer.)})

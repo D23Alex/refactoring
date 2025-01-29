@@ -6,7 +6,7 @@
                      :port (-> "SCOREKEEPER_POSTGRES_PORT" System/getenv)
                      :user (System/getenv "SCOREKEEPER_POSTGRES_USER")
                      :password (System/getenv "SCOREKEEPER_POSTGRES_PASSWORD")}
-           :base-url "/api/statsheets"
+           :base-url "/api/scorekeeper"
            :port (-> "SCOREKEEPER_PORT" System/getenv Integer.)
            :league-manager-api-url (str "http://"
                                         (System/getenv "LEAGUE_MANAGER_HOST")
