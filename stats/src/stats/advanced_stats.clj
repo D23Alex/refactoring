@@ -53,6 +53,21 @@
      :effective-field-goal (/ (+ (totals :two-pointers-made) (-> totals :three-pointers-made (* 3)))
                               (+ (totals :two-pointers-attempted) (totals :three-pointers-attempted)))}))
 
+(defn get-performance-index-rating [seasons teams players games]
+  (let [totals (get-totals seasons teams players games)]
+    (- (->> totals
+            (filter #(contains? #{:points :rebounds :blocks :steals :assists} (first %)))
+            vals
+            (apply +))
+       (->> totals
+            (filter #(contains? #{:field-goals-missed :turnovers :free-throws-missed :fouls} (first %)))
+            vals
+            (apply +)))))
+
+(defn get-offence-efficiency-rating [seasons teams players games]
+  (let [totals (get-totals seasons teams players games)]
+    (/ (totals :points)
+       (totals :field-goals-attempted))))
 
 (defn- on-court-at-timestamp? [in-timestamps out-timestamps timestamp]
   (let [last-event-timestamp (->> in-timestamps
@@ -93,3 +108,33 @@
        (+ (* (count (filter #(= "team2" (% :team)) two-pointers)) 2)
           (* (count (filter #(= "team2" (% :team)) three-pointers)) 3)
           (count (filter #(= "team2" (% :team)) free-throws))))))
+
+(defn get-standard-tendex-rating [player-id game-id]
+  (let [totals (get-totals [] [] [player-id] [game-id])
+        minutes-played (/ (get-time-played player-id game-id) (* 1000 60))]
+    (- (+ (totals :points)
+          (totals :rebounds)
+          (totals :steals)
+          (totals :blocks)
+          (totals :assists))
+       (+ (totals :field-goals-missed)
+          (totals :free-throws-missed)
+          (totals :turnovers)
+          (/ (/ (totals :fouls) minutes-played) 60)))))
+
+(defn get-modified-tendex-rating [player-id game-id]
+  (let [totals (get-totals [] [] [player-id] [game-id])
+        minutes-played (/ (get-time-played player-id game-id) (* 1000 60))]
+    (- (+ (totals :points)
+          (totals :rebounds)
+          (* 1.25 (totals :steals))
+          (totals :blocks)
+          (* 1.25 (totals :assists)))
+       (+ (totals :field-goals-missed)
+          (/ (totals :free-throws-missed) 2)
+          (* 1.25 (totals :turnovers))
+          (-> totals
+              :fouls
+              (/ 2)
+              (/ minutes-played)
+              (/ 60))))))

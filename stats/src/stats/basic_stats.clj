@@ -30,12 +30,17 @@
      :season-ids (events :season-ids)
      :field-goals-attempted (+ two-pointers-attempted three-pointers-attempted)
      :field-goals-made (+ two-pointers-made three-pointers-made)
+     :field-goals-missed (- (+ two-pointers-attempted three-pointers-attempted)
+                            (+ two-pointers-made three-pointers-made))
      :two-pointers-attempted two-pointers-attempted
      :three-pointers-attempted three-pointers-attempted
      :two-pointers-made two-pointers-made
+     :two-pointers-missed (- two-pointers-attempted two-pointers-made)
      :three-pointers-made three-pointers-made
+     :three-pointers-missed (- three-pointers-attempted three-pointers-made)
      :free-throws-attempted free-throws-attempted
      :free-throws-made free-throws-made
+     :free-throws-missed (- free-throws-attempted free-throws-made)
      :points (+ (* two-pointers-made 2)
                 (* three-pointers-made 3)
                 free-throws-made)
