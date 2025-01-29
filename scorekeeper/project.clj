@@ -10,6 +10,9 @@
                  [ring/ring-json "0.5.1"]
                  [com.novemberain/monger "3.6.0"]
                  [clj-http "3.13.0"]
-                 [cheshire "5.13.0"]]
+                 [cheshire "5.13.0"]
+                 [org.postgresql/postgresql "42.2.10"]
+                 [com.github.seancorfield/next.jdbc "1.2.780"]
+                 [com.github.seancorfield/honeysql "2.6.1243"]]
   :main ^:skip-aot scorekeeper.core
   :repl-options {:init-ns scorekeeper.core})
