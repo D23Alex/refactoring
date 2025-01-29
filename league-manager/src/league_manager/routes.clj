@@ -27,7 +27,7 @@
 (def resource-by-url-name (map-invert resource-url-names))
 
 (defn resource-valid? [resource]
-  (contains? (resource-url-names vals) resource))
+  (contains? (vals resource-url-names) resource))
 
 (def resource-full-urls (f/fmap #(str (conf :base-url) "/" %)
                                 resource-url-names))
