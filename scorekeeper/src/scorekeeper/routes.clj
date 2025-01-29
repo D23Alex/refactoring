@@ -8,97 +8,134 @@
             [scorekeeper.postgres :refer [get-event]]
             [scorekeeper.config :refer [conf]]))
 
+(def event-url-names {:rebounds "rebounds"
+                      :field-goal-attempts "field-goal-attempts"
+                      :blocks "blocks"
+                      :steals "steals"
+                      :assists "assists"
+                      :after-timeout-court-appearances "after-timeout-court-appearances"
+                      :fouls "fouls"
+                      :free-throw-attempts "free-throw-attempts"
+                      :inbounds "inbounds"
+                      :out-of-bounds "out-of-bounds"
+                      :period-end-court_exits "period-end_court-exits"
+                      :period-start-court_appearances "period-start-court-appearances"
+                      :rule-violations "rule-violations"
+                      :substitutions-in "substitutions-in"
+                      :substitutions-out "substitutions-out"
+                      :timeout-calls "timeout-calls"})
+
+(def event-by-url-name (map-invert event-url-names))
+
+(defn event-valid? [event]
+  (contains? (event-url-names vals) event))
+
+(def resource-full-urls (f/fmap #(str (conf :base-url) "/" %)
+                                {:events "events"}))
+
 (defn as-integer-coll [s]
   (if (coll? s) (map #(Integer. %) s) (if s #{(Integer. s)} #{})))
 
-(def resource-urls (f/fmap #(str (conf :base-url) "/" %)
-                           {:events "events"}))
-
-(defn as-keyword-coll [s]
-  (if (coll? s) (map keyword s) (if s #{(keyword s)} #{})))
-
 (compojure/defroutes app
-                     (compojure/GET (resource-urls :events)
+                     (compojure/GET (resource-full-urls :events)
                                     [event-types seasons teams players games]
                        {:status 200
-                        :body (get-events (as-keyword-coll event-types)
+                        :body (get-events (map event-by-url-name event-types)
                                           (as-integer-coll seasons)
                                           (as-integer-coll teams)
                                           (as-integer-coll players)
                                           (as-integer-coll games))})
-                     (compojure/GET (str (resource-urls :events) "/:event-type")
+                     (compojure/GET (str (resource-full-urls :events) "/:event-type")
                                     [event-type seasons teams players games]
-                       {:status 200
-                        :body (get-events (as-keyword-coll event-type)
-                                          (as-integer-coll seasons)
-                                          (as-integer-coll teams)
-                                          (as-integer-coll players)
-                                          (as-integer-coll games))})
-                     (compojure/GET (str (resource-urls :events) "/:event-type/season/:season-id")
+                       (if (event-valid? event-type)
+                         {:status 200
+                          :body (get-events [(event-by-url-name event-type)]
+                                            (as-integer-coll seasons)
+                                            (as-integer-coll teams)
+                                            (as-integer-coll players)
+                                            (as-integer-coll games))}
+                         {:status 400}))
+                     (compojure/GET (str (resource-full-urls :events) "/:event-type/season/:season-id")
                                     [event-type season-id teams players games]
-                       {:status 200
-                        :body (get-events (as-keyword-coll event-type)
-                                          (as-integer-coll season-id)
-                                          (as-integer-coll teams)
-                                          (as-integer-coll players)
-                                          (as-integer-coll games))})
-                     (compojure/GET (str (resource-urls :events) "/:event-type/team/:team-id")
+                       (if (event-valid? event-type)
+                         {:status 200
+                          :body (get-events [(event-by-url-name event-type)]
+                                            (as-integer-coll season-id)
+                                            (as-integer-coll teams)
+                                            (as-integer-coll players)
+                                            (as-integer-coll games))}
+                         {:status 400}))
+                     (compojure/GET (str (resource-full-urls :events) "/:event-type/team/:team-id")
                                     [event-type seasons team-id players games]
-                       {:status 200
-                        :body (get-events (as-keyword-coll event-type)
-                                          (as-integer-coll seasons)
-                                          (as-integer-coll team-id)
-                                          (as-integer-coll players)
-                                          (as-integer-coll games))})
-                     (compojure/GET (str (resource-urls :events) "/:event-type/player/:player-id")
+                       (if (event-valid? event-type)
+                         {:status 200
+                          :body (get-events [(event-by-url-name event-type)]
+                                            (as-integer-coll seasons)
+                                            (as-integer-coll team-id)
+                                            (as-integer-coll players)
+                                            (as-integer-coll games))}
+                         {:status 400}))
+                     (compojure/GET (str (resource-full-urls :events) "/:event-type/player/:player-id")
                                     [event-type seasons teams player-id games]
-                       {:status 200
-                        :body (get-events (as-keyword-coll event-type)
-                                          (as-integer-coll seasons)
-                                          (as-integer-coll teams)
-                                          (as-integer-coll player-id)
-                                          (as-integer-coll games))})
-                     (compojure/GET (str (resource-urls :events) "/:event-type/game/:game-id")
+                       (if (event-valid? event-type)
+                         {:status 200
+                          :body (get-events [(event-by-url-name event-type)]
+                                            (as-integer-coll seasons)
+                                            (as-integer-coll teams)
+                                            (as-integer-coll player-id)
+                                            (as-integer-coll games))}
+                         {:status 400}))
+                     (compojure/GET (str (resource-full-urls :events) "/:event-type/game/:game-id")
                                     [event-type seasons teams players game-id]
-                       {:status 200
-                        :body (get-events (as-keyword-coll event-type)
-                                          (as-integer-coll seasons)
-                                          (as-integer-coll teams)
-                                          (as-integer-coll players)
-                                          (as-integer-coll game-id))})
-                     (compojure/GET (str (resource-urls :events) "/:event-type/player/:player-id/game/:game-id")
+                       (if (event-valid? event-type)
+                         {:status 200
+                          :body (get-events [(event-by-url-name event-type)]
+                                            (as-integer-coll seasons)
+                                            (as-integer-coll teams)
+                                            (as-integer-coll players)
+                                            (as-integer-coll game-id))}
+                         {:status 400}))
+                     (compojure/GET (str (resource-full-urls :events) "/:event-type/player/:player-id/game/:game-id")
                                     [event-type seasons teams player-id game-id]
-                       {:status 200
-                        :body (get-events (as-keyword-coll event-type)
-                                          (as-integer-coll seasons)
-                                          (as-integer-coll teams)
-                                          (as-integer-coll player-id)
-                                          (as-integer-coll game-id))})
-                     (compojure/GET (str (resource-urls :events) "/:event-type/team/:team-id/game/:game-id")
+                       (if (event-valid? event-type)
+                         {:status 200
+                          :body (get-events [(event-by-url-name event-type)]
+                                            (as-integer-coll seasons)
+                                            (as-integer-coll teams)
+                                            (as-integer-coll player-id)
+                                            (as-integer-coll game-id))}
+                         {:status 400}))
+                     (compojure/GET (str (resource-full-urls :events) "/:event-type/team/:team-id/game/:game-id")
                                     [event-type seasons team-id players game-id]
-                       {:status 200
-                        :body (get-events (as-keyword-coll event-type)
-                                          (as-integer-coll seasons)
-                                          (as-integer-coll team-id)
-                                          (as-integer-coll players)
-                                          (as-integer-coll game-id))})
-                     (compojure/GET (str (resource-urls :events) "/:event-type/season/:season-id/team/:team-id")
+                       (if (event-valid? event-type)
+                         {:status 200
+                          :body (get-events [(event-by-url-name event-type)]
+                                            (as-integer-coll seasons)
+                                            (as-integer-coll team-id)
+                                            (as-integer-coll players)
+                                            (as-integer-coll game-id))}
+                         {:status 400}))
+                     (compojure/GET (str (resource-full-urls :events) "/:event-type/season/:season-id/team/:team-id")
                                     [event-type season-id team-id players games]
-                       {:status 200
-                        :body (get-events (as-keyword-coll event-type)
-                                          (as-integer-coll season-id)
-                                          (as-integer-coll team-id)
-                                          (as-integer-coll players)
-                                          (as-integer-coll games))})
-                     (compojure/GET (str (resource-urls :events) "/:event-type/season/:season-id/player/:player-id")
+                       (if (event-valid? event-type)
+                         {:status 200
+                          :body (get-events [(event-by-url-name event-type)]
+                                            (as-integer-coll season-id)
+                                            (as-integer-coll team-id)
+                                            (as-integer-coll players)
+                                            (as-integer-coll games))}
+                         {:status 400}))
+                     (compojure/GET (str (resource-full-urls :events) "/:event-type/season/:season-id/player/:player-id")
                                     [event-type season-id teams player-id games]
-                       {:status 200
-                        :body (get-events (as-keyword-coll event-type)
-                                          (as-integer-coll season-id)
-                                          (as-integer-coll teams)
-                                          (as-integer-coll player-id)
-                                          (as-integer-coll games))})
-                     (compojure/GET (str (resource-urls :events) "/:event-type/:id")
+                       (if (event-valid? event-type)
+                         {:status 200
+                          :body (get-events [(event-by-url-name event-type)]
+                                            (as-integer-coll season-id)
+                                            (as-integer-coll teams)
+                                            (as-integer-coll player-id)
+                                            (as-integer-coll games))}
+                         {:status 400}))
+                     (compojure/GET (str (resource-full-urls :events) "/:event-type/:id")
                                     [event-type id]
                        {:status 200
                         :body (get-event event-type id)})

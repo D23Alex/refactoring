@@ -6,10 +6,17 @@
             [next.jdbc :as jdbc]
             [next.jdbc.result-set :as rs]))
 
+(def table-names {:contracts :contracts
+                  :games :games
+                  :lineup-occurrences :lineup_occurrences
+                  :players :players
+                  :seasons :seasons
+                  :teams :teams})
+
 (defn get-resource [resource id]
   (jdbc/execute-one! (conf :db-spec)
                      (-> (h/select :*)
-                         (h/from resource)
+                         (h/from (table-names resource))
                          (h/where [:= :id id])
                          sql/format)
                      {:builder-fn rs/as-unqualified-lower-maps}))
@@ -17,13 +24,13 @@
 (defn get-all-resources [resource]
   (jdbc/execute! (conf :db-spec)
                  (-> (h/select :*)
-                     (h/from resource)
+                     (h/from (table-names resource))
                      sql/format)
                  {:builder-fn rs/as-unqualified-lower-maps}))
 
 (defn create-resource [resource data]
   (jdbc/execute-one! (conf :db-spec)
-                     (-> (h/insert-into resource)
+                     (-> (h/insert-into (table-names resource))
                          (h/values [data])
                          (h/returning :*)
                          sql/format)
@@ -32,7 +39,7 @@
 
 (defn update-resource [resource id data]
   (jdbc/execute-one! (conf :db-spec)
-                     (-> (h/update resource)
+                     (-> (h/update (table-names resource))
                          (h/set data)
                          (h/where [:= :id id])
                          (h/returning :*)
@@ -42,7 +49,7 @@
 
 (defn delete-resource [resource id]
   (jdbc/execute! (conf :db-spec)
-                 (-> (h/delete-from resource)
+                 (-> (h/delete-from (table-names resource))
                      (h/where [:= :id id])
                      sql/format)))
 
